@@ -48,8 +48,8 @@ async function main() {
             console.log("Calling distribute() ...");
             tx = await TreasuryVester.distribute();
             await tx.wait();
-            console.log(getTime(), "Transaction hash:", tx.hash)
-            fs.appendFileSync(`${network.name}.log`, getTime() + " Transaction hash: " + tx.hash + "\n");
+            console.log(getTime().toString(), "Transaction hash:", tx.hash)
+            fs.appendFileSync(`${network.name}.log`, getTime().toString() + " Transaction hash: " + tx.hash + "\n");
             const endBalance = await deployer.getBalance();
             console.log("Total cost: ", initBalance.sub(endBalance).toString())
             let balance = await deployer.getBalance();
