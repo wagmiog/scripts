@@ -3,8 +3,6 @@ const { BigNumber } = require('ethers');
 const fs = require('fs');
 const address = require(`../constants/address_${network.name}.js`);
 const abi = require("../constants/abi.js");
-const { SSL_OP_EPHEMERAL_RSA } = require('constants');
-
 
 async function main() {
 
@@ -44,24 +42,24 @@ async function main() {
         let time = getTime();
         let updateIn = (lastUpdate.add(ONE_DAY).add(ONE_SECOND)).sub(time);
         if (updateIn.gte(0)) {
-          await sleep(updateIn);
+         await sleep(updateIn);
         }
         try {
             console.log("Calling distribute() ...");
             tx = await TreasuryVester.distribute();
             await tx.wait();
             console.log(getTime(), "Transaction hash:", tx.hash)
+            fs.appendFileSync(`${network.name}.log`, getTime() + " Transaction hash: " + tx.hash + "\n");
             const endBalance = await deployer.getBalance();
             console.log("Total cost: ", initBalance.sub(endBalance).toString())
             let balance = await deployer.getBalance();
             console.log("Actual balance: " + balance.toString());
+            fs.appendFileSync(`${network.name}.log`, "Actual balance: " + balance.toString());
         } catch (error) {
             console.error("Errpr attempting distribute()")
             console.error(error.message);
             await sleep(ONE_SECOND)
         }
-
-        
     }
 }
 
